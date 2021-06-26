@@ -1,6 +1,6 @@
-# readcache
+# promise-readcache
 
-`readcache` is a module to keep the contents of a file cached in memory until
+`promise-readcache` is a module to keep the contents of a file cached in memory until
 it's modified. This is done by comparing the file's `fs.Stats.mtime`.
 
 Originally meant to be used with JSON files, but anything else will do. It
@@ -12,32 +12,27 @@ it's less "persistent" than loading JSON files using `require`.
 Using npm:
 
 ```
-npm install readcache
+npm install promise-readcache
 ```
 
 ## Reference
 
-### readcache.readfile (path, [options], [callback])
+### async promise-readcache (path, [options])
 
-Gets the contents of the file at `path`.
+Returns a promise with the contents of the file at `path`.
 
 If the file is not cached yet, or if the file has been modified since the time
 it was cached, the file will be read and its contents cached. Otherwise, you
 will get the cached contents.
 
 ```js
-var readcache = require('readcache');
+const readcache = require('promise-readcache');
 
-readcache('/path/to/file', function (err, data, stats) {
-    console.log(data); // Contents of the file
-    console.log(stats); // { "hit": false, "mtime": 1439974339996 }
-        
-    // The file is cached now, so this time the contents will be coming from 
-    // memory, instead of reading the file again
-    readcache('/path/to/file', function (err, data, stats) {
-        console.log(stats); // { "hit": true, "mtime": 1439974339996 }
-    });
-});
+let data;
+data = await readcache('/path/to/file');
+// The file is cached now, so this time the contents will be coming from 
+// memory, instead of reading the file again
+data = await readcache('/path/to/file');
 ```
 
 __Arguments__
@@ -45,20 +40,23 @@ __Arguments__
 * `options` - Optional set of options passed to `fs.readFile`
     * `encoding` - The string encoding, defaults to `utf8`
     * `flag` - Defaults to `r`
-* `callback` - Optional callback function with signature `(err, data, stats)`
-    * `err` - Error, if any
-    * `data` - The contents of the file
-    * `stats` - Statistics object
-        * `hit` - `true` when the cache was hit, `false` otherwise
-        * `mtime` - The last known modification time of the cached file
-
-## Testing
-
-Run the unit tests with `gulp test`.
 
 ## Benchmarking
 
-Run the benchmark suite with `gulp benchmark`.
+Run the benchmark suite with `npm run benchmark`.
+
+On Node.js v14.16.0, `promise-readcache` is ~2x require, whereas `fs.readFile` is about 10x.
+```
+readcache x 47,501 ops/sec ±0.59% (88 runs sampled)
+readFile x 10,826 ops/sec ±1.38% (81 runs sampled)
+require x 105,554 ops/sec ±33.38% (29 runs sampled)
+Fastest is require
+```
+
+
+_Many node major versions were released since this fork_
+
+_require has since clearly had an Agent Smith type upgrade_
 
 On Node.js v5.0.0, `readcache` is slightly faster than `require` and `fs.readFile`.
 ```
@@ -117,6 +115,8 @@ Finished 'benchmark' after 18 s
 ## License
 
 The MIT License (MIT)
+
+Copyright (c) 2021 Andrew Low
 
 Copyright (c) 2015 Arturo Martínez
 

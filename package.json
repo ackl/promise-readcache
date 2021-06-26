@@ -1,19 +1,22 @@
 {
-  "name": "readcache",
-  "version": "0.1.7",
+  "name": "promise-readcache",
+  "version": "1.0.0",
   "description": "Read a file and keep its contents cached in memory until it's modified",
   "main": "lib/readcache.js",
   "scripts": {
-    "test": "gulp test"
+    "benchmark": "node ./test/benchmark.js"
   },
   "author": "Arturo Martínez <dunkelheit@gmail.com>",
+  "contibutors": [
+    "Andrew Low <contact@ackl.me>"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Dunkelheit/readcache"
+    "url": "https://github.com/ackl/promise-readcache"
   },
   "engines": {
-    "node": ">= 0.10.25"
+    "node": ">= 10.0.0"
   },
   "keywords": [
     "read",
@@ -26,18 +29,11 @@
     "performance"
   ],
   "bugs": {
-    "url": "https://github.com/Dunkelheit/readcache/issues"
+    "url": "https://github.com/ackl/promise-readcache/issues"
   },
-  "homepage": "https://github.com/Dunkelheit/readcache",
+  "homepage": "https://github.com/ackl/promise-readcache",
   "devDependencies": {
-    "benchmark": "2.1.1",
-    "chai": "3.5.0",
-    "gulp": "3.9.1",
-    "gulp-benchmark": "1.1.1",
-    "gulp-istanbul": "1.1.1",
-    "gulp-jshint": "2.0.1",
-    "gulp-mocha": "3.0.1",
-    "jshint-stylish": "2.2.1",
-    "microtime": "2.1.1"
+    "benchmark": "2.1.4",
+    "microtime": "3.0.0"
   }
 }

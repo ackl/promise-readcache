@@ -1,3 +1,7 @@
+### 1.0.0
+* update deps
+* uncallbackify, transparently use fs/promises readFile
+
 ### 0.1.6
 * Add benchmark results for Node.js v4.2.1 and v5.0.0
 * Add new keywords in package.json manifest

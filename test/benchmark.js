@@ -1,33 +1,37 @@
-'use strict';
+const Benchmark = require("benchmark");
+const path = require("path");
+const fs = require("fs/promises");
 
-var Benchmark = require('benchmark');
-var path = require('path');
-var fs = require('fs');
+const readcache = require("../lib/readcache");
 
-var readcache = require('../lib/readcache');
+const suite = new Benchmark.Suite();
 
-var suite = new Benchmark.Suite;
-
-suite.add('readcache', {
+suite
+  .add("readcache", {
     defer: true,
-    fn: function (deferred) {
-        readcache(path.join(__dirname, 'testfile.json'), function () {
-            deferred.resolve();
-        })
-    }
-}).add('readFile', {
+    fn: async function (promise) {
+      await readcache(path.join(__dirname, "testfile.json"));
+      promise.resolve();
+    },
+  })
+  .add("readFile", {
     defer: true,
-    fn: function (deferred) {
-        fs.readFile(path.join(__dirname, 'testfile.json'), function () {
-            deferred.resolve();
-        });
-    }
-}).add('require', {
+    fn: async function (promise) {
+      await fs.readFile(path.join(__dirname, "testfile.json"));
+      promise.resolve();
+    },
+  })
+  .add("require", {
     defer: true,
-    fn: function (deferred) {
-        var json = require('./testfile.json');
-        deferred.resolve();
-    }
-});
-
-module.exports = suite;
+    fn: function (promise) {
+      require("./testfile.json");
+      promise.resolve();
+    },
+  })
+  .on("cycle", function (event) {
+    console.log(String(event.target));
+  })
+  .on("complete", function () {
+    console.log("Fastest is " + this.filter("fastest").map("name"));
+  })
+  .run({ async: true });
